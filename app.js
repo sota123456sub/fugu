@@ -174,6 +174,36 @@ const els = {
 const ctx = els.canvas.getContext("2d");
 
 let templateImg = new Image();
+let templateOverlayCanvas = null;
+
+function buildTemplateOverlay() {
+  // Make the big art-area background transparent so uploaded images show through.
+  // Keeps non-white UI parts (borders, small panel) intact.
+  try {
+    const w = els.canvas.width;
+    const h = els.canvas.height;
+    const c = document.createElement("canvas");
+    c.width = w;
+    c.height = h;
+    const cctx = c.getContext("2d");
+    cctx.drawImage(templateImg, 0, 0, w, h);
+
+    const ar = LAYOUT.art;
+    const id = cctx.getImageData(ar.x, ar.y, ar.w, ar.h);
+    const d = id.data;
+    for (let i = 0; i < d.length; i += 4) {
+      const r = d[i], g = d[i + 1], b = d[i + 2], a = d[i + 3];
+      if (a === 0) continue;
+      // remove near-white pixels only (template art background)
+      if (r > 240 && g > 240 && b > 240) d[i + 3] = 0;
+    }
+    cctx.putImageData(id, ar.x, ar.y);
+    templateOverlayCanvas = c;
+  } catch (e) {
+    templateOverlayCanvas = null;
+  }
+}
+
 let artImg = null;     // Image instance
 let artDataUrl = null; // string
 
@@ -665,11 +695,19 @@ function render() {
   // clear
   ctx.clearRect(0,0,els.canvas.width, els.canvas.height);
 
-  // art (under template/frame)
+  // art area base (keep empty art white)
+  const ar = LAYOUT.art;
+  ctx.save();
+  ctx.fillStyle = "#ffffff";
+  ctx.fillRect(ar.x, ar.y, ar.w, ar.h);
+  ctx.restore();
+
+  // art (clipped to art area)
   drawArt();
 
-  // base template (frame drawn over art)
-  ctx.drawImage(templateImg, 0, 0);
+  // template overlay (art background punched out)
+  if (templateOverlayCanvas) ctx.drawImage(templateOverlayCanvas, 0, 0);
+  else ctx.drawImage(templateImg, 0, 0);
 
   // role icon (in header circle)
   drawRoleIcon(ctx, st);
@@ -1156,6 +1194,7 @@ function boot() {
   ensureRoleIconsLoaded();
 
   templateImg.onload = () => {
+    buildTemplateOverlay();
     render();
     setStatus("起動完了");
   };

@@ -1,0 +1,501 @@
+<!doctype html>
+<html lang="ja">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>ふぐカードメーカー</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <header class="topbar">
+    <div class="brand">
+      <div class="title">ふぐカードメーカー</div>
+    </div>
+    <div class="actions">
+      <button id="btnDownload" class="primary">PNGを保存</button>
+      <button id="btnReset" class="ghost">リセット</button>
+    </div>
+  </header>
+
+  <main class="layout">
+    <section class="panel">
+      <h2>カード設定</h2>
+
+      <div class="grid">
+        <label class="field">
+          <span>カード種別</span>
+          <select id="mode">
+            <option value="player">プレイヤー</option>
+            <option value="item">アイテム</option>
+          </select>
+        </label>
+
+        <label class="field">
+          <span>文字色</span>
+          <input id="textColor" type="color" value="#d10000" />
+        </label>
+      </div>
+
+      <div class="grid">
+        <label class="field">
+          <span>名前</span>
+          <input id="name" type="text" placeholder="例: よしなり" maxlength="40" />
+        </label>
+
+        <label class="field">
+          <span>サブタイトル</span>
+          <input id="subtitle" type="text" placeholder="例: 重量級デブ" maxlength="60" />
+        </label>
+      </div>
+
+      <div class="grid" id="playerOnlyRow1">
+        <label class="field">
+          <span>レア度</span>
+          <select id="rarity">
+            <option>普通</option>
+            <option>ちょいレア</option>
+            <option>レア</option>
+            <option>めっちゃレア</option>
+            <option>ウルトラレア</option>
+            <option>ばりすごいレア</option>
+            <option selected>ダイナミックレア</option>
+          </select>
+        </label>
+
+        <label class="field">
+          <span>🐡 ふぐ指数（数値）</span>
+          <input id="fugu" type="number" min="0" step="1" placeholder="例: 20000" />
+          <small id="fuguHint" class="hint"></small>
+        </label>
+      </div>
+
+      <div class="grid" id="playerOnlyRow2">
+        <label class="field">
+          <span>所属（組織名）</span>
+          <input id="org" type="text" placeholder="例: USSR" maxlength="40" />
+        </label>
+
+        <label class="field">
+          <span>属性（ロール）</span>
+          <select id="role">
+            <option value="">未選択</option>
+            <option>アサルト</option>
+            <option selected>コントローラー</option>
+            <option>サポート</option>
+          </select>
+        </label>
+      </div>
+
+      <label class="field">
+        <span>🔮 能力</span>
+        <textarea id="ability" rows="3" placeholder="例: ヒップドロップ"></textarea>
+      </label>
+
+      <div class="grid" id="playerOnlyRow3">
+        <label class="field">
+          <span>🧟 デバフ / side effects</span>
+          <textarea id="debuff" rows="3" placeholder="例: 手札が吹っ飛ぶ"></textarea>
+        </label>
+
+        <label class="field">
+          <span>🙋 豆知識 / tips</span>
+          <textarea id="tips" rows="3" placeholder="例: 体重200kg"></textarea>
+        </label>
+      </div>
+
+      <label class="field" id="itemOnlyTips">
+        <span>🙋 一言・豆知識</span>
+        <textarea id="itemTips" rows="3" placeholder="例: 使いすぎ注意"></textarea>
+      </label>
+
+      <details class="small">
+        <summary>文字サイズ調整</summary>
+        <div class="grid">
+          <label class="checkbox"><input id="autoFitText" type="checkbox" checked /> 自動で枠に収まるまで縮小</label>
+        </div>
+        <div class="grid">
+          <label class="field">
+            <span>名前</span>
+            <div class="rangeRow">
+              <input id="fsName" type="range" min="10" max="80" step="1" value="52" />
+              <input id="fsNameNum" type="number" min="10" max="80" step="1" value="52" />
+            </div>
+          </label>
+
+          <label class="field">
+            <span>サブタイトル</span>
+            <div class="rangeRow">
+              <input id="fsSubtitle" type="range" min="10" max="60" step="1" value="34" />
+              <input id="fsSubtitleNum" type="number" min="10" max="60" step="1" value="34" />
+            </div>
+          </label>
+        </div>
+
+        <div class="grid" id="fontPlayerOnlyRow1">
+          <label class="field">
+            <span>レア度</span>
+            <div class="rangeRow">
+              <input id="fsRarity" type="range" min="8" max="40" step="1" value="22" />
+              <input id="fsRarityNum" type="number" min="8" max="40" step="1" value="22" />
+            </div>
+          </label>
+
+          <label class="field">
+            <span>ふぐ指数</span>
+            <div class="rangeRow">
+              <input id="fsFugu" type="range" min="10" max="50" step="1" value="30" />
+              <input id="fsFuguNum" type="number" min="10" max="50" step="1" value="30" />
+            </div>
+          </label>
+        </div>
+
+        <div class="grid" id="fontPlayerOnlyRow2">
+          <label class="field">
+            <span>所属/属性</span>
+            <div class="rangeRow">
+              <input id="fsOrgRole" type="range" min="8" max="28" step="1" value="16" />
+              <input id="fsOrgRoleNum" type="number" min="8" max="28" step="1" value="16" />
+            </div>
+          </label>
+
+          <label class="field">
+            <span>能力（大きい文字）</span>
+            <div class="rangeRow">
+              <input id="fsAbility" type="range" min="12" max="90" step="1" value="64" />
+              <input id="fsAbilityNum" type="number" min="12" max="90" step="1" value="64" />
+            </div>
+          </label>
+        </div>
+
+        <div class="grid" id="fontPlayerOnlyRow3">
+          <label class="field">
+            <span>デバフ</span>
+            <div class="rangeRow">
+              <input id="fsDebuff" type="range" min="10" max="70" step="1" value="42" />
+              <input id="fsDebuffNum" type="number" min="10" max="70" step="1" value="42" />
+            </div>
+          </label>
+
+          <label class="field">
+            <span>豆知識</span>
+            <div class="rangeRow">
+              <input id="fsTips" type="range" min="10" max="70" step="1" value="40" />
+              <input id="fsTipsNum" type="number" min="10" max="70" step="1" value="40" />
+            </div>
+          </label>
+        </div>
+
+        <div class="grid" id="fontItemOnlyRow">
+          <label class="field">
+            <span>アイテム豆知識</span>
+            <div class="rangeRow">
+              <input id="fsItemTips" type="range" min="10" max="60" step="1" value="36" />
+              <input id="fsItemTipsNum" type="number" min="10" max="60" step="1" value="36" />
+            </div>
+          </label>
+
+          <div class="field">
+            <span>メモ</span>
+            <small class="muted">※ はみ出す場合は自動で小さくします（見た目の基準サイズを調整できます）。</small>
+          </div>
+        </div>
+      </details>
+
+      <details class="small" id="posAdjust">
+  <summary>位置調整（X/Y）</summary>
+  <p class="muted small">数値はピクセル。<b>+</b>で右/下、<b>-</b>で左/上。</p>
+
+  <div class="grid">
+    <label class="field">
+      <span>メタ一括（レア度/ふぐ指数/所属）X</span>
+      <div class="rangeRow">
+        <input id="metaX" type="range" min="-200" max="200" step="1" value="0" />
+        <input id="metaXNum" type="number" min="-200" max="200" step="1" value="0" />
+      </div>
+    </label>
+
+    <label class="field">
+      <span>メタ一括（レア度/ふぐ指数/所属）Y</span>
+      <div class="rangeRow">
+        <input id="metaY" type="range" min="-200" max="200" step="1" value="-64" />
+        <input id="metaYNum" type="number" min="-200" max="200" step="1" value="-64" />
+      </div>
+    </label>
+  </div>
+
+
+  <div class="grid">
+    <label class="field">
+      <span>ロールアイコンサイズ</span>
+      <div class="rangeRow">
+        <input id="roleIconSize" type="range" min="20" max="140" step="1" value="64" />
+        <input id="roleIconSizeNum" type="number" min="20" max="140" step="1" value="64" />
+      </div>
+    </label>
+  </div>
+
+  <div class="posList">
+    
+
+    <div class="posRow">
+      <div class="posRowLabel">ロールアイコン</div>
+      <div class="posRowCtrl">
+        <div class="rangeRow">
+          <span class="axis">X</span>
+          <input id="posRoleIconX" type="range" min="-300" max="300" step="1" value="0" />
+          <input id="posRoleIconXNum" type="number" min="-300" max="300" step="1" value="0" />
+        </div>
+        <div class="rangeRow">
+          <span class="axis">Y</span>
+          <input id="posRoleIconY" type="range" min="-300" max="300" step="1" value="0" />
+          <input id="posRoleIconYNum" type="number" min="-300" max="300" step="1" value="0" />
+        </div>
+      </div>
+    </div>
+
+    <div class="posRow">
+      <div class="posRowLabel">名前</div>
+      <div class="posRowCtrl">
+        <div class="rangeRow">
+          <span class="axis">X</span>
+          <input id="posNameX" type="range" min="-300" max="300" step="1" value="0" />
+          <input id="posNameXNum" type="number" min="-300" max="300" step="1" value="0" />
+        </div>
+        <div class="rangeRow">
+          <span class="axis">Y</span>
+          <input id="posNameY" type="range" min="-300" max="300" step="1" value="0" />
+          <input id="posNameYNum" type="number" min="-300" max="300" step="1" value="0" />
+        </div>
+      </div>
+    </div>
+
+    <div class="posRow">
+      <div class="posRowLabel">サブタイトル</div>
+      <div class="posRowCtrl">
+        <div class="rangeRow">
+          <span class="axis">X</span>
+          <input id="posSubtitleX" type="range" min="-300" max="300" step="1" value="0" />
+          <input id="posSubtitleXNum" type="number" min="-300" max="300" step="1" value="0" />
+        </div>
+        <div class="rangeRow">
+          <span class="axis">Y</span>
+          <input id="posSubtitleY" type="range" min="-300" max="300" step="1" value="0" />
+          <input id="posSubtitleYNum" type="number" min="-300" max="300" step="1" value="0" />
+        </div>
+      </div>
+    </div>
+
+    <div class="posRow">
+      <div class="posRowLabel">レア度</div>
+      <div class="posRowCtrl">
+        <div class="rangeRow">
+          <span class="axis">X</span>
+          <input id="posRarityX" type="range" min="-300" max="300" step="1" value="0" />
+          <input id="posRarityXNum" type="number" min="-300" max="300" step="1" value="0" />
+        </div>
+        <div class="rangeRow">
+          <span class="axis">Y</span>
+          <input id="posRarityY" type="range" min="-300" max="300" step="1" value="0" />
+          <input id="posRarityYNum" type="number" min="-300" max="300" step="1" value="0" />
+        </div>
+      </div>
+    </div>
+
+    <div class="posRow">
+      <div class="posRowLabel">ふぐ指数</div>
+      <div class="posRowCtrl">
+        <div class="rangeRow">
+          <span class="axis">X</span>
+          <input id="posFuguX" type="range" min="-300" max="300" step="1" value="0" />
+          <input id="posFuguXNum" type="number" min="-300" max="300" step="1" value="0" />
+        </div>
+        <div class="rangeRow">
+          <span class="axis">Y</span>
+          <input id="posFuguY" type="range" min="-300" max="300" step="1" value="0" />
+          <input id="posFuguYNum" type="number" min="-300" max="300" step="1" value="0" />
+        </div>
+      </div>
+    </div>
+
+    <div class="posRow">
+      <div class="posRowLabel">所属/属性</div>
+      <div class="posRowCtrl">
+        <div class="rangeRow">
+          <span class="axis">X</span>
+          <input id="posOrgRoleX" type="range" min="-300" max="300" step="1" value="0" />
+          <input id="posOrgRoleXNum" type="number" min="-300" max="300" step="1" value="0" />
+        </div>
+        <div class="rangeRow">
+          <span class="axis">Y</span>
+          <input id="posOrgRoleY" type="range" min="-300" max="300" step="1" value="0" />
+          <input id="posOrgRoleYNum" type="number" min="-300" max="300" step="1" value="0" />
+        </div>
+      </div>
+    </div>
+
+    <div class="posRow">
+      <div class="posRowLabel">能力</div>
+      <div class="posRowCtrl">
+        <div class="rangeRow">
+          <span class="axis">X</span>
+          <input id="posAbilityX" type="range" min="-300" max="300" step="1" value="0" />
+          <input id="posAbilityXNum" type="number" min="-300" max="300" step="1" value="0" />
+        </div>
+        <div class="rangeRow">
+          <span class="axis">Y</span>
+          <input id="posAbilityY" type="range" min="-300" max="300" step="1" value="0" />
+          <input id="posAbilityYNum" type="number" min="-300" max="300" step="1" value="0" />
+        </div>
+      </div>
+    </div>
+
+    <div class="posRow">
+      <div class="posRowLabel">デバフ</div>
+      <div class="posRowCtrl">
+        <div class="rangeRow">
+          <span class="axis">X</span>
+          <input id="posDebuffX" type="range" min="-300" max="300" step="1" value="0" />
+          <input id="posDebuffXNum" type="number" min="-300" max="300" step="1" value="0" />
+        </div>
+        <div class="rangeRow">
+          <span class="axis">Y</span>
+          <input id="posDebuffY" type="range" min="-300" max="300" step="1" value="0" />
+          <input id="posDebuffYNum" type="number" min="-300" max="300" step="1" value="0" />
+        </div>
+      </div>
+    </div>
+
+    <div class="posRow">
+      <div class="posRowLabel">豆知識（プレイヤー）</div>
+      <div class="posRowCtrl">
+        <div class="rangeRow">
+          <span class="axis">X</span>
+          <input id="posTipsX" type="range" min="-300" max="300" step="1" value="0" />
+          <input id="posTipsXNum" type="number" min="-300" max="300" step="1" value="0" />
+        </div>
+        <div class="rangeRow">
+          <span class="axis">Y</span>
+          <input id="posTipsY" type="range" min="-300" max="300" step="1" value="0" />
+          <input id="posTipsYNum" type="number" min="-300" max="300" step="1" value="0" />
+        </div>
+      </div>
+    </div>
+
+    <div class="posRow">
+      <div class="posRowLabel">一言/豆知識（アイテム）</div>
+      <div class="posRowCtrl">
+        <div class="rangeRow">
+          <span class="axis">X</span>
+          <input id="posItemTipsX" type="range" min="-300" max="300" step="1" value="0" />
+          <input id="posItemTipsXNum" type="number" min="-300" max="300" step="1" value="0" />
+        </div>
+        <div class="rangeRow">
+          <span class="axis">Y</span>
+          <input id="posItemTipsY" type="range" min="-300" max="300" step="1" value="0" />
+          <input id="posItemTipsYNum" type="number" min="-300" max="300" step="1" value="0" />
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="grid">
+    <button id="btnPosReset" class="ghost">位置調整をリセット</button>
+  </div>
+</details>
+
+<div class="divider"></div>
+
+      <h2>イラスト（任意）</h2>
+      <p class="muted">中央の大きい枠に画像を入れたい場合に使います。</p>
+      <div class="grid">
+        <label class="field">
+          <span>画像を選択</span>
+          <input id="artFile" type="file" accept="image/*" />
+        </label>
+
+        <label class="field">
+          <span>トリミング</span>
+          <select id="artFit">
+            <option value="cover" selected>cover（枠いっぱい）</option>
+            <option value="contain">contain（全体表示）</option>
+          </select>
+        </label>
+      </div>
+
+      <details class="small">
+        <summary>トリミング調整（ズーム / 位置）</summary>
+        <div class="grid">
+          <label class="field">
+            <span>ズーム</span>
+            <div class="rangeRow">
+              <input id="artZoom" type="range" min="0.5" max="3" step="0.01" value="1" />
+              <input id="artZoomNum" type="number" min="0.5" max="3" step="0.01" value="1" />
+            </div>
+          </label>
+
+          <label class="field">
+            <span>X（左右）</span>
+            <div class="rangeRow">
+              <input id="artPanX" type="range" min="-400" max="400" step="1" value="0" />
+              <input id="artPanXNum" type="number" min="-400" max="400" step="1" value="0" />
+            </div>
+          </label>
+        </div>
+
+        <div class="grid">
+          <label class="field">
+            <span>Y（上下）</span>
+            <div class="rangeRow">
+              <input id="artPanY" type="range" min="-400" max="400" step="1" value="0" />
+              <input id="artPanYNum" type="number" min="-400" max="400" step="1" value="0" />
+            </div>
+          </label>
+
+          <div class="field">
+            <span>操作</span>
+            <button id="btnArtReset" class="ghost">トリミングをリセット</button>
+            <small class="muted">※ 画像があるときは、プレビュー上でドラッグして位置調整もできます。</small>
+          </div>
+        </div>
+      </details>
+
+      <button id="btnClearArt" class="ghost">画像を外す</button>
+
+      <div class="divider"></div>
+
+      <h2>データ入出力</h2>
+      <div class="grid">
+        <button id="btnExportJson" class="ghost">JSONを書き出し</button>
+        <label class="fileBtn">
+          JSONを読み込み
+          <input id="importJson" type="file" accept="application/json" />
+        </label>
+      </div>
+
+      <details class="small">
+        <summary>ガイド表示（位置調整用）</summary>
+        <label class="checkbox"><input id="showGuides" type="checkbox" /> ガイド（枠）を表示</label>
+      </details>
+
+    </section>
+
+    <section class="preview">
+      <div class="previewHeader">
+        <div>
+          <h2>プレビュー</h2>
+          <div class="muted small">サイズ: 864×1184</div>
+        </div>
+        <div class="muted small" id="status"></div>
+      </div>
+      <div class="canvasWrap">
+        <canvas id="canvas" width="864" height="1184"></canvas>
+      </div>
+      <div class="muted small footnote">
+        ※ テンプレ画像は同梱のものを使用しています。文字位置は「sample_output_reference.png」の配置に合わせたプリセットです。
+      </div>
+    </section>
+  </main>
+
+  <script src="app.js"></script>
+</body>
+</html>

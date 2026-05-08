@@ -32,7 +32,7 @@
 
         <label class="field">
           <span>文字色</span>
-          <input id="textColor" type="color" value="#d10000" />
+          <input id="textColor" type="color" value="#000000" />
         </label>
       </div>
 
@@ -92,7 +92,7 @@
       </label>
 
       <div class="grid" id="playerOnlyRow3">
-        <label class="field">
+        <label class="field" style="display:none">
           <span>🧟 デバフ / side effects</span>
           <textarea id="debuff" rows="3" placeholder="例: 手札が吹っ飛ぶ"></textarea>
         </label>
@@ -168,7 +168,7 @@
         </div>
 
         <div class="grid" id="fontPlayerOnlyRow3">
-          <label class="field">
+          <label class="field" style="display:none">
             <span>デバフ</span>
             <div class="rangeRow">
               <input id="fsDebuff" type="range" min="10" max="70" step="1" value="42" />
@@ -209,16 +209,16 @@
     <label class="field">
       <span>メタ一括（レア度/ふぐ指数/所属）X</span>
       <div class="rangeRow">
-        <input id="metaX" type="range" min="-200" max="200" step="1" value="0" />
-        <input id="metaXNum" type="number" min="-200" max="200" step="1" value="0" />
+        <input id="metaX" type="range" min="-1500" max="1500" step="1" value="92" />
+        <input id="metaXNum" type="number" min="-1500" max="1500" step="1" value="92" />
       </div>
     </label>
 
     <label class="field">
       <span>メタ一括（レア度/ふぐ指数/所属）Y</span>
       <div class="rangeRow">
-        <input id="metaY" type="range" min="-200" max="200" step="1" value="-64" />
-        <input id="metaYNum" type="number" min="-200" max="200" step="1" value="-64" />
+        <input id="metaY" type="range" min="-1500" max="1500" step="1" value="-156" />
+        <input id="metaYNum" type="number" min="-1500" max="1500" step="1" value="-156" />
       </div>
     </label>
   </div>
@@ -242,13 +242,13 @@
       <div class="posRowCtrl">
         <div class="rangeRow">
           <span class="axis">X</span>
-          <input id="posRoleIconX" type="range" min="-300" max="300" step="1" value="0" />
-          <input id="posRoleIconXNum" type="number" min="-300" max="300" step="1" value="0" />
+          <input id="posRoleIconX" type="range" min="-1500" max="1500" step="1" value="611" />
+          <input id="posRoleIconXNum" type="number" min="-1500" max="1500" step="1" value="611" />
         </div>
         <div class="rangeRow">
           <span class="axis">Y</span>
-          <input id="posRoleIconY" type="range" min="-300" max="300" step="1" value="0" />
-          <input id="posRoleIconYNum" type="number" min="-300" max="300" step="1" value="0" />
+          <input id="posRoleIconY" type="range" min="-1500" max="1500" step="1" value="638" />
+          <input id="posRoleIconYNum" type="number" min="-1500" max="1500" step="1" value="638" />
         </div>
       </div>
     </div>
@@ -258,13 +258,13 @@
       <div class="posRowCtrl">
         <div class="rangeRow">
           <span class="axis">X</span>
-          <input id="posNameX" type="range" min="-300" max="300" step="1" value="0" />
-          <input id="posNameXNum" type="number" min="-300" max="300" step="1" value="0" />
+          <input id="posNameX" type="range" min="-1500" max="1500" step="1" value="-21" />
+          <input id="posNameXNum" type="number" min="-1500" max="1500" step="1" value="-21" />
         </div>
         <div class="rangeRow">
           <span class="axis">Y</span>
-          <input id="posNameY" type="range" min="-300" max="300" step="1" value="0" />
-          <input id="posNameYNum" type="number" min="-300" max="300" step="1" value="0" />
+          <input id="posNameY" type="range" min="-1500" max="1500" step="1" value="62" />
+          <input id="posNameYNum" type="number" min="-1500" max="1500" step="1" value="62" />
         </div>
       </div>
     </div>
@@ -274,13 +274,13 @@
       <div class="posRowCtrl">
         <div class="rangeRow">
           <span class="axis">X</span>
-          <input id="posSubtitleX" type="range" min="-300" max="300" step="1" value="0" />
-          <input id="posSubtitleXNum" type="number" min="-300" max="300" step="1" value="0" />
+          <input id="posSubtitleX" type="range" min="-1500" max="1500" step="1" value="-62" />
+          <input id="posSubtitleXNum" type="number" min="-1500" max="1500" step="1" value="-62" />
         </div>
         <div class="rangeRow">
           <span class="axis">Y</span>
-          <input id="posSubtitleY" type="range" min="-300" max="300" step="1" value="0" />
-          <input id="posSubtitleYNum" type="number" min="-300" max="300" step="1" value="0" />
+          <input id="posSubtitleY" type="range" min="-1500" max="1500" step="1" value="62" />
+          <input id="posSubtitleYNum" type="number" min="-1500" max="1500" step="1" value="62" />
         </div>
       </div>
     </div>
@@ -290,13 +290,13 @@
       <div class="posRowCtrl">
         <div class="rangeRow">
           <span class="axis">X</span>
-          <input id="posRarityX" type="range" min="-300" max="300" step="1" value="0" />
-          <input id="posRarityXNum" type="number" min="-300" max="300" step="1" value="0" />
+          <input id="posRarityX" type="range" min="-1500" max="1500" step="1" value="0" />
+          <input id="posRarityXNum" type="number" min="-1500" max="1500" step="1" value="0" />
         </div>
         <div class="rangeRow">
           <span class="axis">Y</span>
-          <input id="posRarityY" type="range" min="-300" max="300" step="1" value="0" />
-          <input id="posRarityYNum" type="number" min="-300" max="300" step="1" value="0" />
+          <input id="posRarityY" type="range" min="-1500" max="1500" step="1" value="0" />
+          <input id="posRarityYNum" type="number" min="-1500" max="1500" step="1" value="0" />
         </div>
       </div>
     </div>
@@ -306,13 +306,13 @@
       <div class="posRowCtrl">
         <div class="rangeRow">
           <span class="axis">X</span>
-          <input id="posFuguX" type="range" min="-300" max="300" step="1" value="0" />
-          <input id="posFuguXNum" type="number" min="-300" max="300" step="1" value="0" />
+          <input id="posFuguX" type="range" min="-1500" max="1500" step="1" value="0" />
+          <input id="posFuguXNum" type="number" min="-1500" max="1500" step="1" value="0" />
         </div>
         <div class="rangeRow">
           <span class="axis">Y</span>
-          <input id="posFuguY" type="range" min="-300" max="300" step="1" value="0" />
-          <input id="posFuguYNum" type="number" min="-300" max="300" step="1" value="0" />
+          <input id="posFuguY" type="range" min="-1500" max="1500" step="1" value="0" />
+          <input id="posFuguYNum" type="number" min="-1500" max="1500" step="1" value="0" />
         </div>
       </div>
     </div>
@@ -322,13 +322,13 @@
       <div class="posRowCtrl">
         <div class="rangeRow">
           <span class="axis">X</span>
-          <input id="posOrgRoleX" type="range" min="-300" max="300" step="1" value="0" />
-          <input id="posOrgRoleXNum" type="number" min="-300" max="300" step="1" value="0" />
+          <input id="posOrgRoleX" type="range" min="-1500" max="1500" step="1" value="0" />
+          <input id="posOrgRoleXNum" type="number" min="-1500" max="1500" step="1" value="0" />
         </div>
         <div class="rangeRow">
           <span class="axis">Y</span>
-          <input id="posOrgRoleY" type="range" min="-300" max="300" step="1" value="0" />
-          <input id="posOrgRoleYNum" type="number" min="-300" max="300" step="1" value="0" />
+          <input id="posOrgRoleY" type="range" min="-1500" max="1500" step="1" value="0" />
+          <input id="posOrgRoleYNum" type="number" min="-1500" max="1500" step="1" value="0" />
         </div>
       </div>
     </div>
@@ -338,29 +338,29 @@
       <div class="posRowCtrl">
         <div class="rangeRow">
           <span class="axis">X</span>
-          <input id="posAbilityX" type="range" min="-300" max="300" step="1" value="0" />
-          <input id="posAbilityXNum" type="number" min="-300" max="300" step="1" value="0" />
+          <input id="posAbilityX" type="range" min="-1500" max="1500" step="1" value="179" />
+          <input id="posAbilityXNum" type="number" min="-1500" max="1500" step="1" value="179" />
         </div>
         <div class="rangeRow">
           <span class="axis">Y</span>
-          <input id="posAbilityY" type="range" min="-300" max="300" step="1" value="0" />
-          <input id="posAbilityYNum" type="number" min="-300" max="300" step="1" value="0" />
+          <input id="posAbilityY" type="range" min="-1500" max="1500" step="1" value="-59" />
+          <input id="posAbilityYNum" type="number" min="-1500" max="1500" step="1" value="-59" />
         </div>
       </div>
     </div>
 
-    <div class="posRow">
+    <div class="posRow" style="display:none">
       <div class="posRowLabel">デバフ</div>
       <div class="posRowCtrl">
         <div class="rangeRow">
           <span class="axis">X</span>
-          <input id="posDebuffX" type="range" min="-300" max="300" step="1" value="0" />
-          <input id="posDebuffXNum" type="number" min="-300" max="300" step="1" value="0" />
+          <input id="posDebuffX" type="range" min="-1500" max="1500" step="1" value="0" />
+          <input id="posDebuffXNum" type="number" min="-1500" max="1500" step="1" value="0" />
         </div>
         <div class="rangeRow">
           <span class="axis">Y</span>
-          <input id="posDebuffY" type="range" min="-300" max="300" step="1" value="0" />
-          <input id="posDebuffYNum" type="number" min="-300" max="300" step="1" value="0" />
+          <input id="posDebuffY" type="range" min="-1500" max="1500" step="1" value="0" />
+          <input id="posDebuffYNum" type="number" min="-1500" max="1500" step="1" value="0" />
         </div>
       </div>
     </div>
@@ -370,13 +370,13 @@
       <div class="posRowCtrl">
         <div class="rangeRow">
           <span class="axis">X</span>
-          <input id="posTipsX" type="range" min="-300" max="300" step="1" value="0" />
-          <input id="posTipsXNum" type="number" min="-300" max="300" step="1" value="0" />
+          <input id="posTipsX" type="range" min="-1500" max="1500" step="1" value="-227" />
+          <input id="posTipsXNum" type="number" min="-1500" max="1500" step="1" value="-227" />
         </div>
         <div class="rangeRow">
           <span class="axis">Y</span>
-          <input id="posTipsY" type="range" min="-300" max="300" step="1" value="0" />
-          <input id="posTipsYNum" type="number" min="-300" max="300" step="1" value="0" />
+          <input id="posTipsY" type="range" min="-1500" max="1500" step="1" value="14" />
+          <input id="posTipsYNum" type="number" min="-1500" max="1500" step="1" value="14" />
         </div>
       </div>
     </div>
@@ -386,13 +386,13 @@
       <div class="posRowCtrl">
         <div class="rangeRow">
           <span class="axis">X</span>
-          <input id="posItemTipsX" type="range" min="-300" max="300" step="1" value="0" />
-          <input id="posItemTipsXNum" type="number" min="-300" max="300" step="1" value="0" />
+          <input id="posItemTipsX" type="range" min="-1500" max="1500" step="1" value="0" />
+          <input id="posItemTipsXNum" type="number" min="-1500" max="1500" step="1" value="0" />
         </div>
         <div class="rangeRow">
           <span class="axis">Y</span>
-          <input id="posItemTipsY" type="range" min="-300" max="300" step="1" value="0" />
-          <input id="posItemTipsYNum" type="number" min="-300" max="300" step="1" value="0" />
+          <input id="posItemTipsY" type="range" min="-1500" max="1500" step="1" value="0" />
+          <input id="posItemTipsYNum" type="number" min="-1500" max="1500" step="1" value="0" />
         </div>
       </div>
     </div>
@@ -404,7 +404,6 @@
 </details>
 
 <div class="divider"></div>
-
       <h2>イラスト（任意）</h2>
       <p class="muted">中央の大きい枠に画像を入れたい場合に使います。</p>
       <div class="grid">
@@ -416,8 +415,8 @@
         <label class="field">
           <span>トリミング</span>
           <select id="artFit">
-            <option value="cover" selected>cover（枠いっぱい）</option>
-            <option value="contain">contain（全体表示）</option>
+            <option value="cover">cover（枠いっぱい）</option>
+            <option value="contain" selected>contain（全体表示）</option>
           </select>
         </label>
       </div>

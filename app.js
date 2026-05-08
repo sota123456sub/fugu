@@ -29,7 +29,7 @@ const RARITY_CAPS = {
 // Canvas size: 864 x 1184
 const LAYOUT = {
   // Big art area (approx)
-  art:   { x: 80,  y: 120, w: 704, h: 636, radius: 0 },
+  art:   { x: 94,  y: 190, w: 693, h: 471, radius: 0 },
 
   // Header
   name:     { x: 170, y: 36,  w: 420, h: 70 },
@@ -59,8 +59,8 @@ const LAYOUT = {
 
 
 const LAYOUT_ITEM = {
-  // Art window same size as player template
-  art:   { x: 80,  y: 120, w: 704, h: 636, radius: 0 },
+  // Art window aligned to the item-card frame
+  art:   { x: 38,  y: 53, w: 791, h: 669, radius: 0 },
 
   // Header (reuse same as player)
   name:     { x: 150, y: 35,  w: 520, h: 70 },
@@ -373,7 +373,13 @@ function drawRoundedClip(ctx, x, y, w, h, r) {
 
 function drawArt(layout) {
   if (!artImg) return;
-  const {x,y,w,h,radius} = (layout || LAYOUT).art;
+  const artBox = (layout || LAYOUT).art;
+  const inset = els.mode?.value === "item" ? 8 : 6; // keep image slightly inside the frame line
+  const x = artBox.x + inset;
+  const y = artBox.y + inset;
+  const w = Math.max(1, artBox.w - inset * 2);
+  const h = Math.max(1, artBox.h - inset * 2);
+  const radius = Math.max(0, (artBox.radius || 0) - inset);
 
   ctx.save();
   drawRoundedClip(ctx, x, y, w, h, radius);
@@ -385,7 +391,7 @@ function drawArt(layout) {
   const iw = artImg.naturalWidth || artImg.width;
   const ih = artImg.naturalHeight || artImg.height;
 
-  const baseScale = (fit === "contain") ? Math.min(w/iw, h/ih) : Math.max(w/iw, h/ih);
+  const baseScale = (fit === "contain") ? Math.min(w / iw, h / ih) : Math.max(w / iw, h / ih);
   const scale = baseScale * zoom;
   const dw = iw * scale;
   const dh = ih * scale;
@@ -475,7 +481,7 @@ function getState() {
 
 function applyState(st) {
   els.mode.value = st.mode ?? "player";
-  els.textColor.value = st.textColor ?? "#d10000";
+  els.textColor.value = st.textColor ?? "#000000";
   els.name.value = st.name ?? "";
   els.subtitle.value = st.subtitle ?? "";
   els.rarity.value = st.rarity ?? "ダイナミックレア";
@@ -486,7 +492,7 @@ function applyState(st) {
   els.debuff.value = st.debuff ?? "";
   els.tips.value = st.tips ?? "";
   els.itemTips.value = st.itemTips ?? "";
-  els.artFit.value = st.artFit ?? "cover";
+  els.artFit.value = st.artFit ?? "contain";
   els.artZoom.value = String(st.artZoom ?? 1);
   els.artZoomNum.value = String(st.artZoom ?? 1);
   els.artPanX.value = String(st.artPanX ?? 0);
@@ -614,17 +620,22 @@ function applyModeDefaultsToControls(mode) {
 
   const setPair = (r, n, v) => { if (r) r.value = String(v); if (n) n.value = String(v); };
 
+  setPair(els.posNameX, els.posNameXNum, isItem ? -71 : -21);
+  setPair(els.posNameY, els.posNameYNum, isItem ? 738 : 62);
+  setPair(els.posSubtitleX, els.posSubtitleXNum, isItem ? -135 : -62);
+  setPair(els.posSubtitleY, els.posSubtitleYNum, isItem ? 738 : 62);
+
   // Item-only defaults (from your screenshot)
   // - ability position
-  setPair(els.posAbilityX, els.posAbilityXNum, isItem ? -8 : 0);
-  setPair(els.posAbilityY, els.posAbilityYNum, isItem ? 52 : 0);
+  setPair(els.posAbilityX, els.posAbilityXNum, isItem ? 179 : 179);
+  setPair(els.posAbilityY, els.posAbilityYNum, isItem ? 151 : -59);
 
   // - item tips position
-  setPair(els.posItemTipsX, els.posItemTipsXNum, isItem ? 5 : 0);
-  setPair(els.posItemTipsY, els.posItemTipsYNum, 0);
+  setPair(els.posItemTipsX, els.posItemTipsXNum, isItem ? -40 : 0);
+  setPair(els.posItemTipsY, els.posItemTipsYNum, isItem ? 71 : 0);
 
   // - debuff Y default for player only
-  setPair(els.posDebuffY, els.posDebuffYNum, isItem ? 0 : -49);
+  setPair(els.posDebuffY, els.posDebuffYNum, 0);
 
   // - item tips font size
   setPair(els.fsItemTips, els.fsItemTipsNum, isItem ? 43 : 36);
@@ -740,7 +751,8 @@ function drawRoleIcon(ctx, st) {
 function render() {
   const st = getState();
   const layout = (st.mode === "item") ? LAYOUT_ITEM : LAYOUT;
-  const tmpl = (st.mode === "item") ? templateItemImg : templateImg;
+  const defaultTemplate = (st.mode === "item") ? templateItemImg : templateImg;
+  const tmpl = defaultTemplate;
   if (!tmpl.complete) return;
   setStatus("描画中…");
 
@@ -861,20 +873,7 @@ drawTextInBox({
       lineGap: 1.05,
     });
 
-    // debuff / tips
-    drawTextInBox({
-      text: st.debuff,
-      box: boxFor("debuff"),
-      color,
-      align: "center",
-      valign: "middle",
-      maxFont: Number(fs.debuff) || 42,
-      minFont: 12,
-      fontWeight: "900",
-      lineGap: 1.05,
-    autoFit: autoFitText,
-    });
-
+    // tips (debuff field removed)
     drawTextInBox({
       text: st.tips,
       box: boxFor("tips"),
@@ -934,7 +933,7 @@ function resetAll() {
 
   const COMMON = {
     mode: currentMode,
-    textColor: "#d10000",
+    textColor: "#000000",
     name: "",
     subtitle: "",
     rarity: "ダイナミックレア",
@@ -946,11 +945,11 @@ function resetAll() {
     tips: "",
     itemTips: "",
     artDataUrl: null,
-    artFit: "cover",
+    artFit: "contain",
 
     // defaults (base)
     roleIconSize: 64,
-    metaOffset: { x: -13, y: -17 },
+    metaOffset: { x: 92, y: -156 },
 
     showGuides: false,
     autoFitText: true,
@@ -958,15 +957,15 @@ function resetAll() {
 
   const PLAYER_DEFAULTS = {
     offsets: {
-      roleIcon: { x: 0, y: 0 },
-      name: { x: 0, y: 11 },
-      subtitle: { x: 0, y: 11 },
+      roleIcon: { x: 611, y: 638 },
+      name: { x: -21, y: 62 },
+      subtitle: { x: -62, y: 62 },
       rarity: { x: 0, y: 0 },
       fugu: { x: 0, y: 0 },
       orgrole: { x: 0, y: 0 },
-      ability: { x: 0, y: 0 },
-      debuff: { x: 0, y: -49 },
-      tips: { x: 0, y: 0 },
+      ability: { x: 179, y: -59 },
+      debuff: { x: 0, y: 0 },
+      tips: { x: -227, y: 14 },
       itemTips: { x: 0, y: 0 },
     },
     fontSizes: {
@@ -984,17 +983,16 @@ function resetAll() {
 
   const ITEM_DEFAULTS = {
     offsets: {
-      roleIcon: { x: 0, y: 0 },
-      name: { x: 0, y: 11 },
-      subtitle: { x: 0, y: 11 },
+      roleIcon: { x: 611, y: 638 },
+      name: { x: -71, y: 738 },
+      subtitle: { x: -135, y: 738 },
       rarity: { x: 0, y: 0 },
       fugu: { x: 0, y: 0 },
       orgrole: { x: 0, y: 0 },
-      // item template tuned offsets (your screenshot)
-      ability: { x: -8, y: 52 },
+      ability: { x: 179, y: 151 },
       debuff: { x: 0, y: 0 },
-      tips: { x: 0, y: 0 },
-      itemTips: { x: 5, y: 0 },
+      tips: { x: -227, y: 14 },
+      itemTips: { x: -40, y: 71 },
     },
     fontSizes: {
       name: 52,
@@ -1134,8 +1132,8 @@ function wireEvents() {
     const isItem = currentMode === "item";
 
     // group meta (rarity/fugu/org)
-    if (els.metaX && els.metaXNum) { els.metaX.value = "-13"; els.metaXNum.value = "-13"; }
-    if (els.metaY && els.metaYNum) { els.metaY.value = "-17"; els.metaYNum.value = "-17"; }
+    if (els.metaX && els.metaXNum) { els.metaX.value = "92"; els.metaXNum.value = "92"; }
+    if (els.metaY && els.metaYNum) { els.metaY.value = "-156"; els.metaYNum.value = "-156"; }
 
     // role icon size
     if (els.roleIconSize && els.roleIconSizeNum) { els.roleIconSize.value = "64"; els.roleIconSizeNum.value = "64"; }
@@ -1143,14 +1141,14 @@ function wireEvents() {
     // per-field offsets
     const setPair = (r, n, v) => { if (r) r.value = String(v); if (n) n.value = String(v); };
 
-    setPair(els.posRoleIconX, els.posRoleIconXNum, 0);
-    setPair(els.posRoleIconY, els.posRoleIconYNum, 0);
+    setPair(els.posRoleIconX, els.posRoleIconXNum, 611);
+    setPair(els.posRoleIconY, els.posRoleIconYNum, 638);
 
-    setPair(els.posNameX, els.posNameXNum, 0);
-    setPair(els.posNameY, els.posNameYNum, 11);
+    setPair(els.posNameX, els.posNameXNum, isItem ? -71 : -21);
+    setPair(els.posNameY, els.posNameYNum, isItem ? 738 : 62);
 
-    setPair(els.posSubtitleX, els.posSubtitleXNum, 0);
-    setPair(els.posSubtitleY, els.posSubtitleYNum, 11);
+    setPair(els.posSubtitleX, els.posSubtitleXNum, isItem ? -135 : -62);
+    setPair(els.posSubtitleY, els.posSubtitleYNum, isItem ? 738 : 62);
 
     setPair(els.posRarityX, els.posRarityXNum, 0);
     setPair(els.posRarityY, els.posRarityYNum, 0);
@@ -1162,17 +1160,17 @@ function wireEvents() {
     setPair(els.posOrgRoleY, els.posOrgRoleYNum, 0);
 
     // ability + item tips defaults differ by mode
-    setPair(els.posAbilityX, els.posAbilityXNum, isItem ? -8 : 0);
-    setPair(els.posAbilityY, els.posAbilityYNum, isItem ? 52 : 0);
+    setPair(els.posAbilityX, els.posAbilityXNum, isItem ? 179 : 179);
+    setPair(els.posAbilityY, els.posAbilityYNum, isItem ? 151 : -59);
 
     setPair(els.posDebuffX, els.posDebuffXNum, 0);
-    setPair(els.posDebuffY, els.posDebuffYNum, isItem ? 0 : -49);
+    setPair(els.posDebuffY, els.posDebuffYNum, 0);
 
-    setPair(els.posTipsX, els.posTipsXNum, 0);
-    setPair(els.posTipsY, els.posTipsYNum, 0);
+    setPair(els.posTipsX, els.posTipsXNum, -227);
+    setPair(els.posTipsY, els.posTipsYNum, 14);
 
-    setPair(els.posItemTipsX, els.posItemTipsXNum, isItem ? 5 : 0);
-    setPair(els.posItemTipsY, els.posItemTipsYNum, 0);
+    setPair(els.posItemTipsX, els.posItemTipsXNum, isItem ? -40 : 0);
+    setPair(els.posItemTipsY, els.posItemTipsYNum, isItem ? 71 : 0);
 
     render();
   });
@@ -1294,18 +1292,18 @@ function boot() {
     render();
     setStatus("起動完了");
   };
-  templateImg.src = TEMPLATE_PNG_DATA_URL;
+  templateImg.src = "template.png?v=" + Date.now();
 
   templateItemImg.onload = () => {
     // item template loaded
     try { render(); } catch (_) {}
   };
-  templateItemImg.src = TEMPLATE_ITEM_PNG_DATA_URL;
+  templateItemImg.src = "item_template.png?v=" + Date.now();
 
   // Default example
   applyState({
     mode: "player",
-    textColor: "#d10000",
+    textColor: "#000000",
     name: "よしなり",
     subtitle: "重量級デブ",
     rarity: "ダイナミックレア",
@@ -1313,24 +1311,24 @@ function boot() {
     org: "USSR",
     role: "コントローラー",
     ability: "ヒップドロップ",
-    debuff: "手札が吹っ飛ぶ",
+    debuff: "",
     tips: "体重200kg",
     itemTips: "",
     artDataUrl: null,
-    artFit: "cover",
+    artFit: "contain",
 
     roleIconSize: 64,
-    metaOffset: { x: -13, y: -17 },
+    metaOffset: { x: 92, y: -156 },
     offsets: {
-      roleIcon: { x: 0, y: 0 },
-      name: { x: 0, y: 11 },
-      subtitle: { x: 0, y: 11 },
+      roleIcon: { x: 611, y: 638 },
+      name: { x: -21, y: 62 },
+      subtitle: { x: -62, y: 62 },
       rarity: { x: 0, y: 0 },
       fugu: { x: 0, y: 0 },
       orgrole: { x: 0, y: 0 },
-      ability: { x: 0, y: 0 },
-      debuff: { x: 0, y: -49 },
-      tips: { x: 0, y: 0 },
+      ability: { x: 179, y: -59 },
+      debuff: { x: 0, y: 0 },
+      tips: { x: -227, y: 14 },
       itemTips: { x: 0, y: 0 },
     },
     fontSizes: {
